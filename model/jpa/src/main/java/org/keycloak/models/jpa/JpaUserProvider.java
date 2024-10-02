@@ -791,12 +791,12 @@ public class JpaUserProvider implements UserProvider.Streams, UserCredentialStor
                     List<Predicate> orPredicates = new ArrayList();
 
                     orPredicates
-                            .add(builder.like(builder.lower(root.get(USERNAME)), "%" + value.toLowerCase() + "%"));
-                    orPredicates.add(builder.like(builder.lower(root.get(EMAIL)), "%" + value.toLowerCase() + "%"));
+                            .add(builder.like(root.get(USERNAME), "%" + value.toLowerCase() + "%"));
+                    orPredicates.add(builder.like(root.get(EMAIL), "%" + value.toLowerCase() + "%"));
                     orPredicates.add(builder.like(
-                            builder.lower(builder.concat(builder.concat(
+                            builder.concat(builder.concat(
                                     builder.coalesce(root.get(FIRST_NAME), builder.literal("")), " "),
-                                    builder.coalesce(root.get(LAST_NAME), builder.literal("")))),
+                                    builder.coalesce(root.get(LAST_NAME), builder.literal(""))),
                             "%" + value.toLowerCase() + "%"));
 
                     predicates.add(builder.or(orPredicates.toArray(new Predicate[orPredicates.size()])));
@@ -808,9 +808,9 @@ public class JpaUserProvider implements UserProvider.Streams, UserCredentialStor
                 case LAST_NAME:
                 case EMAIL:
                     if (Boolean.valueOf(attributes.getOrDefault(UserModel.EXACT, Boolean.FALSE.toString()))) {
-                        predicates.add(builder.equal(builder.lower(root.get(key)), value.toLowerCase()));
+                        predicates.add(builder.equal(root.get(key), value.toLowerCase()));
                     } else {
-                        predicates.add(builder.like(builder.lower(root.get(key)), "%" + value.toLowerCase() + "%"));
+                        predicates.add(builder.like(root.get(key), "%" + value.toLowerCase() + "%"));
                     }
                     break;
                 case EMAIL_VERIFIED:
